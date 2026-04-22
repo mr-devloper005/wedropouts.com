@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { Footer } from "@/components/shared/footer";
 import { NavbarShell } from "@/components/shared/navbar-shell";
+import { ContentImage } from "@/components/shared/content-image";
 import { TaskPostCard } from "@/components/shared/task-post-card";
 import { SchemaJsonLd } from "@/components/seo/schema-jsonld";
 import { buildPostMetadata, buildTaskMetadata } from "@/lib/seo";
@@ -44,16 +45,15 @@ export default async function PdfDetailPage({ params }: { params: Promise<{ slug
 
   const content = post.content && typeof post.content === "object" ? post.content : {};
   const contentAny = content as Record<string, unknown>;
-  const fileUrl =
-    (typeof contentAny.fileUrl === "string" && contentAny.fileUrl) ||
-    (typeof contentAny.pdfUrl === "string" && contentAny.pdfUrl) ||
-    "";
-
-  if (!fileUrl || !/^https?:\/\//i.test(fileUrl)) {
-    notFound();
-  }
-
-  const viewerUrl = `${fileUrl}#toolbar=0&navpanes=0&scrollbar=0`;
+  const description =
+    (typeof contentAny.description === "string" && contentAny.description.trim()) ||
+    post.summary ||
+    "Detailed PDF description will appear here.";
+  const previewImage =
+    (Array.isArray(post.media) && typeof post.media[0]?.url === "string" && post.media[0]?.url) ||
+    (typeof contentAny.image === "string" && contentAny.image) ||
+    (typeof contentAny.logo === "string" && contentAny.logo) ||
+    "/covers/pdf-cover.svg";
   const baseUrl = SITE_CONFIG.baseUrl.replace(/\/$/, "");
   const category =
     typeof contentAny.category === "string" ? contentAny.category : "";
@@ -95,41 +95,40 @@ export default async function PdfDetailPage({ params }: { params: Promise<{ slug
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[linear-gradient(180deg,#fffdf1_0%,#fff4dd_100%)]">
       <NavbarShell />
       <main className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
         <SchemaJsonLd data={breadcrumbData} />
         <Link
           href="/pdf"
-          className="text-sm text-muted-foreground hover:text-foreground"
+          className="text-sm text-[#7a4a1f] hover:text-[#562f00]"
         >
           ← Back to PDF Library
         </Link>
-        <h1 className="text-2xl font-semibold text-foreground">{post.title}</h1>
-        <div className="overflow-hidden rounded-2xl bg-background">
-          <iframe
-            src={viewerUrl}
-            title={post.title}
-            className="h-[85vh] w-full"
-          />
+        <h1 className="text-2xl font-semibold text-[#562f00]">{post.title}</h1>
+        <div className="overflow-hidden rounded-2xl border border-[#562f00]/15 bg-[#fffdf1]">
+          <div className="relative aspect-[16/10] w-full bg-[#fff4df]">
+            <ContentImage
+              src={previewImage}
+              alt={`${post.title} cover`}
+              fill
+              className="object-cover"
+              intrinsicWidth={1200}
+              intrinsicHeight={800}
+            />
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          <a
-            href={fileUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-muted"
-          >
-            Download PDF
-          </a>
+        <div className="rounded-2xl border border-[#562f00]/15 bg-[#fff9ec] p-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8d5828]">Description</p>
+          <p className="mt-3 text-base leading-8 text-[#7a4a1f]">{description}</p>
         </div>
         {related.length ? (
           <section className="pt-4">
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-foreground">More like this</h2>
+              <h2 className="text-lg font-semibold text-[#562f00]">More like this</h2>
               <Link
                 href="/pdf"
-                className="text-sm text-muted-foreground hover:text-foreground"
+                className="text-sm text-[#7a4a1f] hover:text-[#562f00]"
               >
                 View all
               </Link>
@@ -143,8 +142,8 @@ export default async function PdfDetailPage({ params }: { params: Promise<{ slug
                 />
               ))}
             </div>
-            <nav className="mt-6 rounded-2xl border border-border bg-card/60 p-4">
-              <p className="text-sm font-semibold text-foreground">Related links</p>
+            <nav className="mt-6 rounded-2xl border border-[#562f00]/15 bg-[#fff9ec] p-4">
+              <p className="text-sm font-semibold text-[#562f00]">Related links</p>
               <ul className="mt-2 space-y-2 text-sm">
                 {related.map((item) => (
                   <li key={`related-${item.id}`}>

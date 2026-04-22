@@ -2,6 +2,7 @@ import { SITE_CONFIG, type TaskKey } from "./site-config";
 import { fetchSiteFeed, type SiteFeed, type SitePost } from "./site-connector";
 import { getMockPostsForTask } from "./mock-posts";
 import { isValidCategory } from "./categories";
+import { getFallbackPostBySlug, getFallbackPostsForTask } from "./fallback-posts";
 
 const getTaskContentType = (task: TaskKey) =>
   SITE_CONFIG.tasks.find((item) => item.key === task)?.contentType || task;
@@ -56,10 +57,13 @@ export const fetchTaskPosts = async (
 
     const freshFeed = await fetchSiteFeed(limit * 6, { fresh: true });
     const filtered = pickTaskPosts(freshFeed);
-    return filtered.length || !allowMockFallback
-      ? filtered
-      : getMockPostsForTask(task).slice(0, limit);
+    if (filtered.length) return filtered;
+    const fallbackPosts = getFallbackPostsForTask(task, limit);
+    if (fallbackPosts.length) return fallbackPosts;
+    return allowMockFallback ? getMockPostsForTask(task).slice(0, limit) : [];
   } catch {
+    const fallbackPosts = getFallbackPostsForTask(task, limit);
+    if (fallbackPosts.length) return fallbackPosts;
     return allowMockFallback ? getMockPostsForTask(task).slice(0, limit) : [];
   }
 };
@@ -82,9 +86,10 @@ export const fetchTaskPostBySlug = async (task: TaskKey, slug: string) => {
     // fall through to mock data
   }
 
-  return allowMockFallback
-    ? getMockPostsForTask(task).find((post) => post.slug === slug) || null
-    : null;
+  const fallbackPost = getFallbackPostBySlug(task, slug);
+  if (fallbackPost) return fallbackPost;
+
+  return allowMockFallback ? getMockPostsForTask(task).find((post) => post.slug === slug) || null : null;
 };
 
 export const buildPostUrl = (task: TaskKey, slug: string) => {
