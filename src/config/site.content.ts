@@ -2,72 +2,72 @@ import type { TaskKey } from '@/lib/site-config'
 
 export const siteContent = {
   navbar: {
-    tagline: 'PDF + Profile platform',
+    tagline: 'Professional PDF and profile hub',
   },
   footer: {
-    tagline: 'PDF + Profile platform',
+    tagline: 'Trusted documents and identities',
   },
   hero: {
-    badge: 'Latest stories and visuals',
-    title: ['A thoughtful home for', 'stories, visuals, and discovery.'],
-    description: 'A PDF + Profile site for Wedropouts, built for clean discovery and structured publishing.',
+    badge: 'Purpose-built workspace',
+    title: ['A professional home for', 'PDF libraries and profile credibility.'],
+    description: 'Wedropouts helps teams publish trusted PDF resources and maintain clear public profiles in one organized platform.',
     primaryCta: {
-      label: 'Read latest stories',
-      href: '/articles',
+      label: 'Open PDF Library',
+      href: '/pdf',
     },
     secondaryCta: {
-      label: 'Explore visuals',
-      href: '/images',
+      label: 'Browse Profiles',
+      href: '/profile',
     },
-    searchPlaceholder: 'Search stories, visuals, listings, and more',
-    focusLabel: 'Focus',
-    featureCardBadge: 'latest cover rotation',
-    featureCardTitle: 'Latest posts shape the visual identity of the homepage.',
+    searchPlaceholder: 'Search PDFs, profiles, and related sections',
+    focusLabel: 'Primary focus',
+    featureCardBadge: 'curated publishing flow',
+    featureCardTitle: 'Documents and identity pages work together for trusted discovery.',
     featureCardDescription:
-      'Recent images and stories stay at the center of the experience without changing any core platform behavior.',
+      'The interface is tuned for document-first navigation while preserving every task route and system behavior.',
   },
   home: {
     metadata: {
-      title: 'Stories, visuals, and discoverable content',
-      description: 'A PDF + Profile site for Wedropouts, built for clean discovery and structured publishing.',
-      openGraphTitle: 'Stories, visuals, and discoverable content',
+      title: 'Professional PDF library and profiles',
+      description: 'A classic, professional platform for publishing PDFs and profile pages with dependable discovery.',
+      openGraphTitle: 'Professional PDF library and profiles',
       openGraphDescription:
-        'Discover articles, visual posts, and connected content through a calmer reading-first experience.',
-      keywords: ['story platform', 'article site', 'visual content', 'content discovery'],
+        'Discover trusted PDFs, expert profiles, and accessible task routes across a professional publishing interface.',
+      keywords: ['pdf platform', 'profile platform', 'document discovery', 'professional publishing'],
     },
-    introBadge: 'About the platform',
-    introTitle: 'Built for reading, browsing, and connecting different kinds of content.',
+    introBadge: 'Platform purpose',
+    introTitle: 'Built to publish structured PDFs and strengthen profile trust.',
     introParagraphs: [
-      'This site brings together article-style reading, visual browsing, and structured discovery so visitors can move naturally between different content types.',
-      'Instead of separating stories, visuals, and supporting resources into disconnected surfaces, the platform keeps them connected in one place with consistent navigation and easier exploration.',
-      'Whether someone starts with a story, an image-led post, a listing, or a resource page, they can keep discovering related content without friction.',
+      'This site is designed around two core surfaces: a searchable PDF library and profile pages that establish ownership, credibility, and context.',
+      'Documents remain easy to scan and open, while profiles provide the people, organizations, and intent behind each publication.',
+      'All other task routes remain active and URL-accessible, but discovery is intentionally centered on PDF and profile workflows.',
     ],
-    sideBadge: 'At a glance',
+    sideBadge: 'What stands out',
     sidePoints: [
-      'Reading-first homepage with stronger emphasis on stories and imagery.',
-      'Connected sections for articles, visuals, listings, and supporting resources.',
-      'Cleaner browsing rhythm designed to make exploration feel easier.',
-      'Lightweight interactions that keep the experience fast and readable.',
+      'PDF-first homepage architecture with professional document framing.',
+      'Profile-first trust signals beside document surfaces.',
+      'Classic typography and warm paper palette for editorial clarity.',
+      'Lightweight motion and performance-focused components.',
     ],
     primaryLink: {
-      label: 'Browse articles',
-      href: '/articles',
+      label: 'Browse PDFs',
+      href: '/pdf',
     },
     secondaryLink: {
-      label: 'See visuals',
-      href: '/images',
+      label: 'Explore profiles',
+      href: '/profile',
     },
   },
   cta: {
-    badge: 'Start exploring',
-    title: 'Explore articles, visuals, and resources through one connected experience.',
-    description: 'A PDF + Profile site for Wedropouts, built for clean discovery and structured publishing.',
+    badge: 'Get started',
+    title: 'Publish trusted PDF resources with clear profile ownership.',
+    description: 'Keep your document library discoverable and your profile identity consistent across every section.',
     primaryCta: {
-      label: 'Get Started Free',
+      label: 'Create an account',
       href: '/register',
     },
     secondaryCta: {
-      label: 'Contact Sales',
+      label: 'Contact support',
       href: '/contact',
     },
   },
@@ -78,31 +78,31 @@ export const siteContent = {
 export const taskPageMetadata: Record<Exclude<TaskKey, 'comment' | 'org' | 'social'>, { title: string; description: string }> = {
   article: {
     title: 'Articles and stories',
-    description: 'A PDF + Profile site for Wedropouts, built for clean discovery and structured publishing.',
+    description: 'Long-form insights connected to PDFs, profiles, and supporting resources.',
   },
   listing: {
     title: 'Listings and discoverable pages',
-    description: 'A PDF + Profile site for Wedropouts, built for clean discovery and structured publishing.',
+    description: 'Structured listings that remain accessible alongside the primary PDF and profile focus.',
   },
   classified: {
     title: 'Classifieds and announcements',
-    description: 'A PDF + Profile site for Wedropouts, built for clean discovery and structured publishing.',
+    description: 'Timely announcements available as part of the broader multi-task platform.',
   },
   image: {
     title: 'Images and visual posts',
-    description: 'A PDF + Profile site for Wedropouts, built for clean discovery and structured publishing.',
+    description: 'Visual media surfaces that complement profile and document workflows.',
   },
   profile: {
     title: 'Profiles and public pages',
-    description: 'A PDF + Profile site for Wedropouts, built for clean discovery and structured publishing.',
+    description: 'Professional profile surfaces for creators, experts, and organizations.',
   },
   sbm: {
     title: 'Curated links and saved resources',
-    description: 'A PDF + Profile site for Wedropouts, built for clean discovery and structured publishing.',
+    description: 'Curated references and bookmark collections within the same publishing system.',
   },
   pdf: {
     title: 'PDFs and downloadable resources',
-    description: 'A PDF + Profile site for Wedropouts, built for clean discovery and structured publishing.',
+    description: 'A structured PDF library for trusted downloads, guides, and reports.',
   },
 }
 

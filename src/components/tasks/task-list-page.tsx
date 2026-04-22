@@ -59,6 +59,8 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
   const layoutKey = recipe.taskLayouts[task as keyof typeof recipe.taskLayouts] || `${task}-${task === 'listing' ? 'directory' : 'editorial'}`
   const shellClass = variantShells[layoutKey as keyof typeof variantShells] || 'bg-background'
   const Icon = taskIcons[task] || LayoutGrid
+  const isPdfTask = task === 'pdf'
+  const isProfileTask = task === 'profile'
 
   const isDark = ['image-masonry', 'image-portfolio', 'profile-creator'].includes(layoutKey)
   const ui = isDark
@@ -120,7 +122,29 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
           />
         ) : null}
 
-        {layoutKey === 'listing-directory' || layoutKey === 'listing-showcase' ? (
+        {isPdfTask ? (
+          <section className="mb-12">
+            <div className="rounded-[2rem] border border-[#562f00]/14 bg-[#fffdf1] p-7 shadow-[0_22px_54px_rgba(86,47,0,0.1)]">
+              <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.24em] text-[#8d5828]"><Icon className="h-4 w-4" /> PDF Library</div>
+              <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-[#562f00]">Professional documents, guides, and reports in one searchable shelf.</h1>
+              <p className="mt-4 max-w-2xl text-sm leading-8 text-[#7a4a1f]">This section emphasizes readability, trust, and utility-first access to PDF materials without changing any publishing or route logic.</p>
+            </div>
+          </section>
+        ) : null}
+
+        {isProfileTask ? (
+          <section className="mb-12 rounded-[2.2rem] border border-[#562f00]/14 bg-[linear-gradient(180deg,#fff8e8_0%,#fffdf1_100%)] p-8 shadow-[0_20px_48px_rgba(86,47,0,0.09)]">
+            <div>
+              <div>
+                <p className="text-xs uppercase tracking-[0.3em] text-[#8d5828]">Profile directory</p>
+                <h1 className="mt-3 text-4xl font-semibold tracking-[-0.04em] text-[#562f00]">Professional identity pages with stronger trust and ownership cues.</h1>
+                <p className="mt-5 max-w-2xl text-sm leading-8 text-[#7a4a1f]">Profiles are presented as credibility anchors for document publishing, with structured metadata and consistent discovery behavior.</p>
+              </div>
+            </div>
+          </section>
+        ) : null}
+
+        {!isPdfTask && !isProfileTask && (layoutKey === 'listing-directory' || layoutKey === 'listing-showcase') ? (
           <section className="mb-12 grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
             <div className={`rounded-[2rem] p-7 shadow-[0_24px_70px_rgba(15,23,42,0.07)] ${ui.panel}`}>
               <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.24em] opacity-70"><Icon className="h-4 w-4" /> {taskConfig?.label || task}</div>
@@ -146,7 +170,7 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
           </section>
         ) : null}
 
-        {layoutKey === 'article-editorial' || layoutKey === 'article-journal' ? (
+        {!isPdfTask && !isProfileTask && (layoutKey === 'article-editorial' || layoutKey === 'article-journal') ? (
           <section className="mb-12 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
             <div>
               <p className={`text-xs uppercase tracking-[0.3em] ${ui.muted}`}>{taskConfig?.label || task}</p>
@@ -169,7 +193,7 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
           </section>
         ) : null}
 
-        {layoutKey === 'image-masonry' || layoutKey === 'image-portfolio' ? (
+        {!isPdfTask && !isProfileTask && (layoutKey === 'image-masonry' || layoutKey === 'image-portfolio') ? (
           <section className="mb-12 grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
             <div>
               <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] ${ui.soft}`}>
@@ -186,7 +210,7 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
           </section>
         ) : null}
 
-        {layoutKey === 'profile-creator' || layoutKey === 'profile-business' ? (
+        {!isPdfTask && !isProfileTask && (layoutKey === 'profile-creator' || layoutKey === 'profile-business') ? (
           <section className={`mb-12 rounded-[2.2rem] p-8 shadow-[0_24px_70px_rgba(15,23,42,0.1)] ${ui.panel}`}>
             <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
               <div className={`min-h-[240px] rounded-[2rem] ${ui.soft}`} />
@@ -199,7 +223,7 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
           </section>
         ) : null}
 
-        {layoutKey === 'classified-bulletin' || layoutKey === 'classified-market' ? (
+        {!isPdfTask && !isProfileTask && (layoutKey === 'classified-bulletin' || layoutKey === 'classified-market') ? (
           <section className="mb-12 grid gap-4 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
             <div className={`rounded-[1.8rem] p-6 ${ui.panel}`}>
               <p className={`text-xs uppercase tracking-[0.3em] ${ui.muted}`}>{taskConfig?.label || task}</p>
@@ -215,7 +239,7 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
           </section>
         ) : null}
 
-        {layoutKey === 'sbm-curation' || layoutKey === 'sbm-library' ? (
+        {!isPdfTask && !isProfileTask && (layoutKey === 'sbm-curation' || layoutKey === 'sbm-library') ? (
           <section className="mb-12 grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
             <div>
               <p className={`text-xs uppercase tracking-[0.3em] ${ui.muted}`}>{taskConfig?.label || task}</p>
@@ -243,11 +267,13 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
             {intro.paragraphs.map((paragraph) => (
               <p key={paragraph.slice(0, 40)} className={`mt-4 text-sm leading-7 ${ui.muted}`}>{paragraph}</p>
             ))}
-            <div className="mt-4 flex flex-wrap gap-4 text-sm">
-              {intro.links.map((link) => (
-                <a key={link.href} href={link.href} className="font-semibold text-foreground hover:underline">{link.label}</a>
-              ))}
-            </div>
+            {task !== 'pdf' && task !== 'profile' ? (
+              <div className="mt-4 flex flex-wrap gap-4 text-sm">
+                {intro.links.map((link) => (
+                  <a key={link.href} href={link.href} className="font-semibold text-foreground hover:underline">{link.label}</a>
+                ))}
+              </div>
+            ) : null}
           </section>
         ) : null}
 
