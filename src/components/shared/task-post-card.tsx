@@ -55,6 +55,18 @@ const getImageUrl = (post: SitePost, content: ListingContent) => {
 }
 
 const cardStyles = {
+  'document-classic': {
+    frame: 'rounded-[1.2rem] border border-[#562f00]/14 bg-[#fffdf1] shadow-[0_16px_38px_rgba(86,47,0,0.09)] hover:-translate-y-1 hover:shadow-[0_20px_46px_rgba(86,47,0,0.14)]',
+    muted: 'text-[#7a4a1f]',
+    title: 'text-[#562f00]',
+    badge: 'bg-[#ffce99] text-[#562f00]',
+  },
+  'profile-ledger': {
+    frame: 'rounded-[1.2rem] border border-[#562f00]/14 bg-[linear-gradient(180deg,#fff7e6_0%,#fffdf1_100%)] shadow-[0_16px_38px_rgba(86,47,0,0.08)] hover:-translate-y-1 hover:shadow-[0_20px_46px_rgba(86,47,0,0.13)]',
+    muted: 'text-[#7a4a1f]',
+    title: 'text-[#562f00]',
+    badge: 'bg-[#562f00] text-[#fff3de]',
+  },
   'listing-elevated': {
     frame: 'rounded-[1.9rem] border border-slate-200 bg-white shadow-[0_20px_60px_rgba(15,23,42,0.08)] hover:-translate-y-1 hover:shadow-[0_28px_75px_rgba(15,23,42,0.14)]',
     muted: 'text-slate-600',
@@ -81,7 +93,11 @@ const cardStyles = {
   },
 } as const
 
-const getVariantForTask = (taskKey: TaskKey) => SITE_THEME.cards[taskKey] || 'listing-elevated'
+const getVariantForTask = (taskKey: TaskKey) => {
+  if (taskKey === 'pdf') return 'document-classic'
+  if (taskKey === 'profile') return 'profile-ledger'
+  return SITE_THEME.cards[taskKey] || 'listing-elevated'
+}
 
 export function TaskPostCard({
   post,
@@ -106,7 +122,7 @@ export function TaskPostCard({
   const variant = taskKey || 'listing'
   const visualVariant = cardStyles[getVariantForTask(variant)]
   const isBookmarkVariant = variant === 'sbm' || variant === 'social'
-  const imageAspect = variant === 'image' ? 'aspect-[4/5]' : variant === 'article' ? 'aspect-[16/10]' : variant === 'pdf' ? 'aspect-[4/5]' : variant === 'classified' ? 'aspect-[16/11]' : 'aspect-[4/3]'
+  const imageAspect = variant === 'image' ? 'aspect-[4/5]' : variant === 'article' ? 'aspect-[16/10]' : variant === 'pdf' ? 'aspect-[3/4]' : variant === 'classified' ? 'aspect-[16/11]' : 'aspect-[4/3]'
   const altText = `${post.title} ${category} ${variant === 'listing' ? 'business listing' : variant} image`
   const imageSizes = variant === 'article' ? '(max-width: 640px) 90vw, (max-width: 1024px) 48vw, 420px' : variant === 'image' ? '(max-width: 640px) 82vw, (max-width: 1024px) 34vw, 320px' : '(max-width: 640px) 85vw, (max-width: 1024px) 42vw, 340px'
 
@@ -185,14 +201,14 @@ export function TaskPostCard({
 
   return (
     <Link href={href} className={`group flex h-full flex-col overflow-hidden transition duration-300 ${visualVariant.frame}`}>
-      <div className={`relative ${imageAspect} overflow-hidden bg-[#ede2dc]`}>
+      <div className={`relative ${imageAspect} overflow-hidden ${variant === 'pdf' ? 'bg-[#fff2dc]' : 'bg-[#ede2dc]'}`}>
         <ContentImage src={image} alt={altText} fill sizes={imageSizes} quality={75} className="object-cover transition-transform duration-500 group-hover:scale-[1.04]" intrinsicWidth={960} intrinsicHeight={720} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent opacity-80" />
         <span className={`absolute left-4 top-4 inline-flex items-center gap-1 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${visualVariant.badge}`}>
           <Tag className="h-3.5 w-3.5" />
           {category}
         </span>
-        {variant === 'pdf' && <span className="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-white/88 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-950 shadow"><FileText className="h-3.5 w-3.5" />PDF</span>}
+        {variant === 'pdf' && <span className="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full border border-[#562f00]/18 bg-[#fffdf1]/95 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#562f00] shadow-sm"><FileText className="h-3.5 w-3.5" />PDF</span>}
       </div>
       <div className={`flex flex-1 flex-col p-5 ${compact ? 'py-4' : ''}`}>
         <h3 className={`line-clamp-2 font-semibold leading-snug ${variant === 'article' ? 'text-[1.35rem]' : 'text-lg'} ${visualVariant.title}`}>{post.title}</h3>

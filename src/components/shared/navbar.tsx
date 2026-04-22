@@ -96,6 +96,10 @@ export function Navbar() {
   const pathname = usePathname()
   const { isAuthenticated } = useAuth()
   const { recipe } = getFactoryState()
+  const primaryTask = SITE_CONFIG.tasks.find((task) => task.key === 'pdf') || SITE_CONFIG.tasks.find((task) => task.enabled)
+  const secondaryTask = SITE_CONFIG.tasks.find((task) => task.key === 'profile')
+  const isPrimaryActive = primaryTask ? pathname.startsWith(primaryTask.route) : false
+  const isSecondaryActive = secondaryTask ? pathname.startsWith(secondaryTask.route) : false
 
   const navigation = useMemo(() => SITE_CONFIG.tasks.filter((task) => task.enabled && task.key !== 'profile'), [])
   const primaryNavigation = navigation.slice(0, 5)
@@ -104,8 +108,77 @@ export function Navbar() {
     href: task.route,
     icon: taskIcons[task.key] || LayoutGrid,
   }))
-  const primaryTask = SITE_CONFIG.tasks.find((task) => task.key === recipe.primaryTask && task.enabled) || primaryNavigation[0]
+  const recipePrimaryTask = SITE_CONFIG.tasks.find((task) => task.key === recipe.primaryTask && task.enabled) || primaryNavigation[0]
   const isDirectoryProduct = recipe.homeLayout === 'listing-home' || recipe.homeLayout === 'classified-home'
+
+  if (primaryTask) {
+    return (
+      <header className="sticky top-0 z-50 w-full border-b border-[#562f00]/12 bg-[#fffdf1]/95 text-[#562f00] backdrop-blur-xl">
+        <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+          <div className="flex min-w-0 items-center gap-4">
+            <Link href="/" className="flex items-center gap-3">
+              <div className="flex h-14 w-40 shrink-0 items-center justify-center overflow-hidden p-0">
+                <img src="/favicon.png?v=20260422" alt={`${SITE_CONFIG.name} logo`} width="160" height="56" className="h-full w-full object-cover object-center" />
+              </div>
+              <div className="hidden min-w-0 sm:block">
+                <span className="block truncate text-xl font-semibold">{SITE_CONFIG.name}</span>
+                <span className="block text-[10px] uppercase tracking-[0.24em] text-[#8d5828]">{siteContent.navbar.tagline}</span>
+              </div>
+            </Link>
+            <div className="hidden items-center gap-2 lg:flex">
+              <Link href={primaryTask.route} className={cn('rounded-full px-4 py-2 text-sm font-semibold transition-colors', isPrimaryActive ? 'bg-[#562f00] text-[#fff7e6]' : 'bg-[#ffce99]/40 text-[#562f00] hover:bg-[#ffce99]/70')}>
+                {primaryTask.label}
+              </Link>
+              {secondaryTask ? (
+                <Link href={secondaryTask.route} className={cn('rounded-full px-4 py-2 text-sm font-semibold transition-colors', isSecondaryActive ? 'bg-[#562f00] text-[#fff7e6]' : 'bg-[#ffce99]/40 text-[#562f00] hover:bg-[#ffce99]/70')}>
+                  {secondaryTask.label}
+                </Link>
+              ) : null}
+            </div>
+          </div>
+          <div className="hidden xl:block" />
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            <Button variant="ghost" size="icon" asChild className="hidden rounded-full text-[#562f00] md:flex">
+              <Link href="/search">
+                <Search className="h-5 w-5" />
+              </Link>
+            </Button>
+            {isAuthenticated ? (
+              <NavbarAuthControls />
+            ) : (
+              <div className="hidden items-center gap-2 md:flex">
+                <Button variant="ghost" size="sm" asChild className="rounded-full px-4 text-[#562f00] hover:bg-[#ffce99]/50">
+                  <Link href="/login">Sign in</Link>
+                </Button>
+                <Button size="sm" asChild className="rounded-full bg-[#ff9644] text-[#562f00] hover:bg-[#f58f40]">
+                  <Link href="/register">Join</Link>
+                </Button>
+              </div>
+            )}
+            <Button variant="ghost" size="icon" className="rounded-full text-[#562f00] lg:hidden" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
+          </div>
+        </nav>
+        {isMobileMenuOpen ? (
+          <div className="border-t border-[#562f00]/12 bg-[#fff8e8]">
+            <div className="space-y-2 px-4 py-4">
+              <Link href="/search" onClick={() => setIsMobileMenuOpen(false)} className="mb-3 flex items-center gap-3 rounded-2xl border border-[#562f00]/15 bg-[#fffdf1] px-4 py-3 text-sm font-semibold text-[#7a4a1f]">
+                <Search className="h-4 w-4" />
+                Search the library
+              </Link>
+              {[primaryTask, secondaryTask].filter(Boolean).map((item: any) => (
+                <Link key={item.key} href={item.route} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 rounded-2xl border border-[#562f00]/12 bg-[#fffdf1] px-4 py-3 text-sm font-semibold text-[#562f00]">
+                  <ChevronRight className="h-4 w-4 text-[#ff9644]" />
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        ) : null}
+      </header>
+    )
+  }
 
   if (isDirectoryProduct) {
     const palette = directoryPalette[(recipe.brandPack === 'market-utility' ? 'market-utility' : 'directory-clean') as keyof typeof directoryPalette]
@@ -115,8 +188,8 @@ export function Navbar() {
         <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <div className="flex min-w-0 items-center gap-4">
             <Link href="/" className="flex shrink-0 items-center gap-3">
-              <div className={cn('flex h-12 w-12 items-center justify-center overflow-hidden p-1.5', palette.logo)}>
-                <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
+              <div className={cn('flex h-14 w-40 items-center justify-center overflow-hidden p-0')}>
+                <img src="/favicon.png?v=20260422" alt={`${SITE_CONFIG.name} logo`} width="160" height="56" className="h-full w-full object-cover object-center" />
               </div>
               <div className="min-w-0 hidden sm:block">
                 <span className="block truncate text-xl font-semibold">{SITE_CONFIG.name}</span>
@@ -148,10 +221,10 @@ export function Navbar() {
           </div>
 
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-            {primaryTask ? (
-              <Link href={primaryTask.route} className="hidden items-center gap-2 rounded-full border border-current/10 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] opacity-75 md:inline-flex">
+            {recipePrimaryTask ? (
+              <Link href={recipePrimaryTask.route} className="hidden items-center gap-2 rounded-full border border-current/10 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] opacity-75 md:inline-flex">
                 <Sparkles className="h-3.5 w-3.5" />
-                {primaryTask.label}
+                {recipePrimaryTask.label}
               </Link>
             ) : null}
 
@@ -210,8 +283,8 @@ export function Navbar() {
       <nav className={cn('mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8', isFloating ? 'h-24 pt-4' : 'h-20')}>
         <div className="flex min-w-0 flex-1 items-center gap-4 lg:gap-7">
           <Link href="/" className="flex shrink-0 items-center gap-3 whitespace-nowrap pr-2">
-            <div className={cn('flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden p-1.5', style.logo)}>
-              <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
+            <div className={cn('flex h-14 w-40 shrink-0 items-center justify-center overflow-hidden p-0')}>
+              <img src="/favicon.png?v=20260422" alt={`${SITE_CONFIG.name} logo`} width="160" height="56" className="h-full w-full object-cover object-center" />
             </div>
             <div className="min-w-0 hidden sm:block">
               <span className="block truncate text-xl font-semibold">{SITE_CONFIG.name}</span>
@@ -273,10 +346,10 @@ export function Navbar() {
         </div>
 
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-          {primaryTask && (recipe.navbar === 'utility-bar' || recipe.navbar === 'floating-bar') ? (
-            <Link href={primaryTask.route} className="hidden items-center gap-2 rounded-full border border-current/10 px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] opacity-80 md:inline-flex">
+          {recipePrimaryTask && (recipe.navbar === 'utility-bar' || recipe.navbar === 'floating-bar') ? (
+            <Link href={recipePrimaryTask.route} className="hidden items-center gap-2 rounded-full border border-current/10 px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] opacity-80 md:inline-flex">
               <Sparkles className="h-3.5 w-3.5" />
-              {primaryTask.label}
+              {recipePrimaryTask.label}
             </Link>
           ) : null}
 
@@ -306,11 +379,11 @@ export function Navbar() {
         </div>
       </nav>
 
-      {isFloating && primaryTask ? (
+      {isFloating && recipePrimaryTask ? (
         <div className="mx-auto hidden max-w-7xl px-4 pb-3 sm:px-6 lg:block lg:px-8">
-          <Link href={primaryTask.route} className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-200 backdrop-blur hover:bg-white/12">
+          <Link href={recipePrimaryTask.route} className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-200 backdrop-blur hover:bg-white/12">
             Featured surface
-            <span>{primaryTask.label}</span>
+            <span>{recipePrimaryTask.label}</span>
             <ChevronRight className="h-3.5 w-3.5" />
           </Link>
         </div>

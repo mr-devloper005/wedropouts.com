@@ -59,6 +59,47 @@ export function Footer() {
   const { recipe } = getFactoryState()
   const enabledTasks = SITE_CONFIG.tasks.filter((task) => task.enabled)
   const primaryTask = enabledTasks.find((task) => task.key === recipe.primaryTask) || enabledTasks[0]
+  const pdfTask = SITE_CONFIG.tasks.find((task) => task.key === 'pdf')
+  const profileTask = SITE_CONFIG.tasks.find((task) => task.key === 'profile')
+
+  if (pdfTask) {
+    return (
+      <footer className="border-t border-[#562f00]/15 bg-[linear-gradient(180deg,#fff8e8_0%,#fff0d5_100%)] text-[#562f00]">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr_1fr]">
+            <div className="rounded-[1.8rem] border border-[#562f00]/14 bg-[#fffdf1] p-6">
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl border border-[#562f00]/15 bg-[#fff7e7] p-1.5">
+                  <img src="/favicon.png?v=20260422" alt={`${SITE_CONFIG.name} logo`} width="44" height="44" className="h-full w-full object-contain" />
+                </div>
+                <div>
+                  <p className="text-lg font-semibold">{SITE_CONFIG.name}</p>
+                  <p className="text-xs uppercase tracking-[0.22em] text-[#8d5828]">{siteContent.footer.tagline}</p>
+                </div>
+              </div>
+              <p className="mt-4 max-w-md text-sm leading-7 text-[#7a4a1f]">{SITE_CONFIG.description}</p>
+            </div>
+            <div>
+              <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8d5828]">Primary navigation</h3>
+              <ul className="mt-4 space-y-3 text-sm">
+                {[pdfTask, profileTask].filter(Boolean).map((task: any) => (
+                  <li key={task.key}>
+                    <Link href={task.route} className="inline-flex items-center gap-2 font-semibold hover:text-[#8d5828]">
+                      <ArrowRight className="h-3.5 w-3.5" />
+                      {task.label}
+                    </Link>
+                  </li>
+                ))}
+                <li><Link href="/search" className="inline-flex items-center gap-2 hover:text-[#8d5828]"><ArrowRight className="h-3.5 w-3.5" />Search across all tasks</Link></li>
+              </ul>
+            </div>
+            <div />
+          </div>
+          <div className="mt-10 border-t border-[#562f00]/12 pt-4 text-sm text-[#8d5828]">&copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.</div>
+        </div>
+      </footer>
+    )
+  }
 
   if (recipe.footer === 'minimal-footer') {
     return (
@@ -88,7 +129,7 @@ export function Footer() {
             <div className="rounded-[2rem] border border-white/10 bg-white/5 p-7">
               <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/12 bg-white/8 p-1.5">
-                  <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
+                  <img src="/favicon.png?v=20260422" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
                 </div>
                 <div>
                   <p className="text-lg font-semibold">{SITE_CONFIG.name}</p>
@@ -180,7 +221,7 @@ export function Footer() {
           <div>
             <Link href="/" className="flex items-center gap-3">
               <div className="h-11 w-11 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1 shadow-sm">
-                <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="44" height="44" className="h-full w-full object-contain" />
+                <img src="/favicon.png?v=20260422" alt={`${SITE_CONFIG.name} logo`} width="44" height="44" className="h-full w-full object-contain" />
               </div>
               <div>
                 <span className="block text-lg font-semibold">{SITE_CONFIG.name}</span>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 1280" role="img" aria-label="PDF cover placeholder">
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fffdf1" />
+      <stop offset="100%" stop-color="#ffe8c8" />
+    </linearGradient>
+    <linearGradient id="header" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ffce99" />
+      <stop offset="100%" stop-color="#ff9644" />
+    </linearGradient>
+  </defs>
+  <rect width="960" height="1280" fill="url(#paper)" />
+  <rect x="86" y="92" width="788" height="1100" rx="26" fill="#fffaf0" stroke="#8a4d18" stroke-opacity="0.35" />
+  <rect x="86" y="92" width="788" height="176" rx="26" fill="url(#header)" />
+  <text x="132" y="176" fill="#5b3006" font-size="54" font-family="Georgia, serif" font-weight="700">PDF COVER</text>
+  <text x="132" y="232" fill="#5b3006" font-size="26" font-family="Arial, sans-serif" letter-spacing="4">WEDROPOUTS LIBRARY</text>
+  <rect x="132" y="332" width="694" height="12" rx="6" fill="#d8b086" />
+  <rect x="132" y="382" width="620" height="12" rx="6" fill="#d8b086" />
+  <rect x="132" y="432" width="660" height="12" rx="6" fill="#d8b086" />
+  <rect x="132" y="582" width="694" height="420" rx="20" fill="#fff1dd" stroke="#8a4d18" stroke-opacity="0.22" />
+  <rect x="168" y="626" width="250" height="280" rx="16" fill="#ffce99" />
+  <text x="458" y="708" fill="#5b3006" font-size="42" font-family="Georgia, serif" font-weight="700">REPORT</text>
+  <text x="458" y="760" fill="#5b3006" font-size="24" font-family="Arial, sans-serif">Professional document</text>
+  <text x="458" y="800" fill="#5b3006" font-size="24" font-family="Arial, sans-serif">ready for publishing</text>
+</svg>

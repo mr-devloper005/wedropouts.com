@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" role="img" aria-label="Professional profile cover">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fff8e8" />
+      <stop offset="100%" stop-color="#ffe2c0" />
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fffdf4" />
+      <stop offset="100%" stop-color="#fff3e0" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1400" height="900" fill="url(#bg)" />
+  <rect x="72" y="72" width="1256" height="756" rx="34" fill="#fffdf4" stroke="#8a4d18" stroke-opacity="0.22" />
+
+  <rect x="132" y="144" width="430" height="612" rx="26" fill="url(#card)" stroke="#8a4d18" stroke-opacity="0.18" />
+  <rect x="592" y="144" width="430" height="612" rx="26" fill="url(#card)" stroke="#8a4d18" stroke-opacity="0.18" />
+
+  <circle cx="347" cy="280" r="86" fill="#ffd09e" stroke="#8a4d18" stroke-opacity="0.28" stroke-width="4" />
+  <circle cx="347" cy="252" r="30" fill="#8a4d18" fill-opacity="0.24" />
+  <path d="M 275 328 C 292 286, 402 286, 419 328 C 426 344, 422 363, 410 374 L 284 374 C 272 363, 268 344, 275 328 Z" fill="#8a4d18" fill-opacity="0.17" />
+
+  <circle cx="807" cy="280" r="86" fill="#ffd09e" stroke="#8a4d18" stroke-opacity="0.28" stroke-width="4" />
+  <circle cx="807" cy="252" r="30" fill="#8a4d18" fill-opacity="0.24" />
+  <path d="M 735 328 C 752 286, 862 286, 879 328 C 886 344, 882 363, 870 374 L 744 374 C 732 363, 728 344, 735 328 Z" fill="#8a4d18" fill-opacity="0.17" />
+
+  <rect x="248" y="432" width="198" height="14" rx="7" fill="#c78f5f" />
+  <rect x="248" y="468" width="168" height="12" rx="6" fill="#c78f5f" />
+  <rect x="248" y="500" width="186" height="12" rx="6" fill="#c78f5f" />
+
+  <rect x="708" y="432" width="198" height="14" rx="7" fill="#c78f5f" />
+  <rect x="708" y="468" width="168" height="12" rx="6" fill="#c78f5f" />
+  <rect x="708" y="500" width="186" height="12" rx="6" fill="#c78f5f" />
+
+  <rect x="1080" y="144" width="188" height="612" rx="24" fill="#fff1dd" stroke="#8a4d18" stroke-opacity="0.16" />
+  <rect x="1112" y="184" width="124" height="14" rx="7" fill="#c78f5f" />
+  <rect x="1112" y="214" width="96" height="12" rx="6" fill="#c78f5f" />
+  <rect x="1112" y="284" width="124" height="214" rx="16" fill="#ffd09e" />
+  <rect x="1112" y="530" width="124" height="14" rx="7" fill="#c78f5f" />
+  <rect x="1112" y="560" width="108" height="12" rx="6" fill="#c78f5f" />
+
+  <text x="700" y="800" text-anchor="middle" fill="#5b3006" font-size="34" font-family="Arial, sans-serif" letter-spacing="8">PROFILE DIRECTORY COVER</text>
+</svg>

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowRight, Bookmark, Building2, Compass, FileText, Globe2, Image as ImageIcon, LayoutGrid, MapPin, ShieldCheck, Tag, User } from 'lucide-react'
+import { ArrowRight, Bookmark, Building2, Compass, FileText, Globe2, Image as ImageIcon, LayoutGrid, MapPin, ShieldCheck, Tag, User, Archive, CircleCheckBig } from 'lucide-react'
 import { ContentImage } from '@/components/shared/content-image'
 import { NavbarShell } from '@/components/shared/navbar-shell'
 import { Footer } from '@/components/shared/footer'
@@ -14,6 +14,7 @@ import { getFactoryState } from '@/design/factory/get-factory-state'
 import { getProductKind, type ProductKind } from '@/design/factory/get-product-kind'
 import type { SitePost } from '@/lib/site-connector'
 import { HOME_PAGE_OVERRIDE_ENABLED, HomePageOverride } from '@/overrides/home-page'
+import { getFallbackPostsForTask } from '@/lib/fallback-posts'
 
 export const revalidate = 300
 
@@ -136,6 +137,112 @@ function getCurationTone() {
     action: 'bg-[#5b2b3b] text-[#fff0f5] hover:bg-[#74364b]',
     actionAlt: 'border border-[#ddcdbd] bg-transparent text-[#261811] hover:bg-[#efe3d6]',
   }
+}
+
+function PdfProfileHome({
+  primaryTask,
+  secondaryTask,
+  pdfPosts,
+  profilePosts,
+}: {
+  primaryTask?: EnabledTask
+  secondaryTask?: EnabledTask
+  pdfPosts: SitePost[]
+  profilePosts: SitePost[]
+}) {
+  const fallbackPdfPosts = getFallbackPostsForTask('pdf', 4)
+  const fallbackProfilePosts = getFallbackPostsForTask('profile', 3)
+  const focusPosts = [...fallbackPdfPosts, ...pdfPosts]
+    .filter((post, index, list) => list.findIndex((item) => item.slug === post.slug) === index)
+    .slice(0, 4)
+  const profileHighlights = [...fallbackProfilePosts, ...profilePosts]
+    .filter((post, index, list) => list.findIndex((item) => item.slug === post.slug) === index)
+    .slice(0, 3)
+
+  return (
+    <main className="bg-[linear-gradient(180deg,#fffdf1_0%,#fff4dd_35%,#fffaf0_100%)] text-[#562f00]">
+      <section className="border-b border-[#562f00]/15">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+          <div className="grid gap-9 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+            <div>
+              <span className="inline-flex items-center gap-2 rounded-full border border-[#562f00]/20 bg-[#ffce99]/55 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#562f00]">
+                <Archive className="h-3.5 w-3.5" />
+                PDF and profile platform
+              </span>
+              <h1 className="mt-6 max-w-4xl text-5xl font-semibold tracking-[-0.05em] sm:text-6xl">
+                A classic workspace for trusted documents and clear profile identity.
+              </h1>
+              <p className="mt-6 max-w-2xl text-base leading-8 text-[#7a4a1f]">
+                {SITE_CONFIG.description}
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link href={primaryTask?.route || '/pdf'} className="inline-flex items-center gap-2 rounded-full bg-[#ff9644] px-5 py-3 text-sm font-semibold text-[#562f00] shadow-[0_14px_30px_rgba(255,150,68,0.32)] transition hover:translate-y-[-1px] hover:bg-[#f58f40]">
+                  Open PDF Library
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link href={secondaryTask?.route || '/profile'} className="inline-flex items-center gap-2 rounded-full border border-[#562f00]/20 bg-[#fffdf1] px-5 py-3 text-sm font-semibold text-[#562f00] hover:bg-[#ffefd2]">
+                  View professional profiles
+                </Link>
+              </div>
+            </div>
+            <aside className="space-y-4 rounded-[2rem] border border-[#562f00]/14 bg-[#fff8e8] p-6 shadow-[0_26px_60px_rgba(86,47,0,0.1)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8d5828]">Purpose of this website</p>
+              <h2 className="text-3xl font-semibold tracking-[-0.03em]">Publish, verify, and present documents with identity context.</h2>
+              <ul className="space-y-3 text-sm leading-7 text-[#7a4a1f]">
+                <li className="flex items-start gap-2"><CircleCheckBig className="mt-0.5 h-4 w-4 shrink-0 text-[#ff9644]" />PDF content is framed for quick scanning and reliable download access.</li>
+                <li className="flex items-start gap-2"><CircleCheckBig className="mt-0.5 h-4 w-4 shrink-0 text-[#ff9644]" />Profile pages provide credibility for creators, teams, and organizations.</li>
+                <li className="flex items-start gap-2"><CircleCheckBig className="mt-0.5 h-4 w-4 shrink-0 text-[#ff9644]" />Task routes stay fully available while homepage emphasis remains focused.</li>
+              </ul>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="flex items-end justify-between gap-4 border-b border-[#562f00]/15 pb-5">
+          <div>
+            <h2 className="mt-2 text-3xl font-semibold tracking-[-0.04em]">Featured PDF resources</h2>
+          </div>
+          <Link href="/pdf" className="text-sm font-semibold text-[#562f00] hover:text-[#8d5828]">View all PDFs</Link>
+        </div>
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {focusPosts.map((post) => (
+            <TaskPostCard key={post.id} post={post} href={getTaskHref('pdf', post.slug)} taskKey="pdf" />
+          ))}
+        </div>
+      </section>
+
+      <section className="border-y border-[#562f00]/12 bg-[#fff7e6]">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+          <div className="grid gap-7 lg:grid-cols-[0.95fr_1.05fr]">
+            <div className="rounded-[2rem] border border-[#562f00]/14 bg-[#fffdf1] p-7">
+              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">Profile surfaces with stronger trust cues</h2>
+              <p className="mt-4 text-sm leading-7 text-[#7a4a1f]">
+                Profiles remain the second major discovery lane, helping visitors connect each document to verified people and organizations.
+              </p>
+              <Link href="/profile" className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#562f00] px-5 py-3 text-sm font-semibold text-[#fff7e6] hover:bg-[#6c3b03]">
+                Open profiles
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {profileHighlights.map((post) => (
+                <Link key={post.id} href={getTaskHref('profile', post.slug)} className="rounded-[1.4rem] border border-[#562f00]/12 bg-[#fffdf1] p-4 hover:bg-[#fff5df]">
+                  <div className="relative mb-3 h-32 overflow-hidden rounded-xl border border-[#562f00]/10 bg-[#fff4e1]">
+                    <ContentImage src={getPostImage(post)} alt={post.title} fill className="object-cover" />
+                  </div>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8d5828]">Profile</p>
+                  <h3 className="mt-2 line-clamp-2 text-lg font-semibold">{post.title}</h3>
+                  <p className="mt-2 line-clamp-3 text-sm leading-7 text-[#7a4a1f]">{post.summary || 'Professional identity and publication context.'}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  )
 }
 
 function DirectoryHome({ primaryTask, enabledTasks, listingPosts, classifiedPosts, profilePosts, brandPack }: {
@@ -497,6 +604,8 @@ export default async function HomePage() {
   const imagePosts = taskFeed.find(({ task }) => task.key === 'image')?.posts || []
   const profilePosts = taskFeed.find(({ task }) => task.key === 'profile')?.posts || []
   const bookmarkPosts = taskFeed.find(({ task }) => task.key === 'sbm')?.posts || []
+  const pdfPosts = taskFeed.find(({ task }) => task.key === 'pdf')?.posts || []
+  const secondaryTask = enabledTasks.find((task) => task.key === 'profile' && task.key !== primaryTask?.key)
 
   const schemaData = [
     {
@@ -524,7 +633,15 @@ export default async function HomePage() {
     <div className="min-h-screen bg-background text-foreground">
       <NavbarShell />
       <SchemaJsonLd data={schemaData} />
-      {productKind === 'directory' ? (
+      {enabledTasks.some((task) => task.key === 'pdf') ? (
+        <PdfProfileHome
+          primaryTask={enabledTasks.find((task) => task.key === 'pdf') || primaryTask}
+          secondaryTask={secondaryTask}
+          pdfPosts={pdfPosts}
+          profilePosts={profilePosts}
+        />
+      ) : null}
+      {!enabledTasks.some((task) => task.key === 'pdf') && productKind === 'directory' ? (
         <DirectoryHome
           primaryTask={primaryTask}
           enabledTasks={enabledTasks}
@@ -534,13 +651,13 @@ export default async function HomePage() {
           brandPack={recipe.brandPack}
         />
       ) : null}
-      {productKind === 'editorial' ? (
+      {!enabledTasks.some((task) => task.key === 'pdf') && productKind === 'editorial' ? (
         <EditorialHome primaryTask={primaryTask} articlePosts={articlePosts} supportTasks={supportTasks} />
       ) : null}
-      {productKind === 'visual' ? (
+      {!enabledTasks.some((task) => task.key === 'pdf') && productKind === 'visual' ? (
         <VisualHome primaryTask={primaryTask} imagePosts={imagePosts} profilePosts={profilePosts} articlePosts={articlePosts} />
       ) : null}
-      {productKind === 'curation' ? (
+      {!enabledTasks.some((task) => task.key === 'pdf') && productKind === 'curation' ? (
         <CurationHome primaryTask={primaryTask} bookmarkPosts={bookmarkPosts} profilePosts={profilePosts} articlePosts={articlePosts} />
       ) : null}
       <Footer />
