@@ -4,11 +4,16 @@ import { Footer } from "@/components/shared/footer";
 import { NavbarShell } from "@/components/shared/navbar-shell";
 import { ContentImage } from "@/components/shared/content-image";
 import { TaskPostCard } from "@/components/shared/task-post-card";
+import { ProfileDetailClient } from "@/components/shared/profile-detail-client";
 import { SchemaJsonLd } from "@/components/seo/schema-jsonld";
-import { buildPostUrl } from "@/lib/task-data";
+import { buildPostUrl, getPostImages } from "@/lib/task-data";
 import { buildPostMetadata, buildTaskMetadata } from "@/lib/seo";
 import { fetchTaskPostBySlug, fetchTaskPosts } from "@/lib/task-data";
 import { SITE_CONFIG } from "@/lib/site-config";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Users, Calendar, Globe, Eye, FileText } from "lucide-react";
 
 export const revalidate = 3;
 
@@ -78,6 +83,10 @@ export default async function ProfileDetailPage({ params }: { params: Promise<{ 
     post.summary ||
     "Profile details will appear here once available.";
   const descriptionHtml = formatRichHtml(description);
+  const images = getPostImages(post);
+  const birthday =
+    (content.birthday as string | undefined) ||
+    (content.dateOfBirth as string | undefined);
   const suggestedArticles = await fetchTaskPosts("article", 6);
   const baseUrl = SITE_CONFIG.baseUrl.replace(/\/$/, "");
   const breadcrumbData = {
@@ -105,42 +114,149 @@ export default async function ProfileDetailPage({ params }: { params: Promise<{ 
     ],
   };
 
+  const joinedDate = post.createdAt || post.publishedAt;
+  const formattedJoined = joinedDate
+    ? new Date(joinedDate).toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "January 1, 2025";
+
+  // Generate consistent follower count between 2-10 based on profile ID
+  const getFollowerCount = (id: string) => {
+    let hash = 0;
+    for (let i = 0; i < id.length; i++) {
+      hash = ((hash << 5) - hash) + id.charCodeAt(i);
+      hash = hash & hash;
+    }
+    return Math.abs(hash % 9) + 2; // 2-10 range
+  };
+  const followerCount = getFollowerCount(post.id);
+
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#fff8e8_0%,#fffdf1_100%)]">
       <NavbarShell />
       <main className="mx-auto w-full max-w-6xl px-4 pb-16 pt-10 sm:px-6 lg:px-8">
         <SchemaJsonLd data={breadcrumbData} />
-        <section className="rounded-3xl border border-[#562f00]/16 bg-[#fffdf1] p-8 shadow-[0_20px_48px_rgba(86,47,0,0.1)] md:p-12">
-          <div className="grid gap-8 md:grid-cols-[200px_1fr] md:items-start">
-            <div className="flex justify-center md:justify-start">
-              <div className="relative h-36 w-36 overflow-hidden rounded-full border border-[#562f00]/18 bg-[#fff2dc]">
+
+        {/* Profile Header */}
+        <section className="overflow-hidden rounded-3xl border border-[#562f00]/16 bg-white shadow-[0_20px_48px_rgba(86,47,0,0.1)]">
+          {/* Top area: avatar + name */}
+          <div className="px-6 pt-8 pb-6 md:px-12 md:pt-12 md:pb-8">
+            <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-center">
+              <div className="relative z-10 -mb-10 h-28 w-28 overflow-hidden rounded-full border-4 border-white bg-[#fff2dc] shadow-lg sm:-mb-14 sm:h-32 sm:w-32">
                 {logoUrl ? (
-                  <ContentImage src={logoUrl} alt={post.title} fill className="object-cover" sizes="144px" intrinsicWidth={144} intrinsicHeight={144} />
+                  <ContentImage
+                    src={logoUrl}
+                    alt={post.title}
+                    fill
+                    className="object-cover"
+                    sizes="144px"
+                    intrinsicWidth={144}
+                    intrinsicHeight={144}
+                  />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center text-3xl font-semibold text-[#8d5828]">
                     {post.title.slice(0, 1).toUpperCase()}
                   </div>
                 )}
               </div>
+              <div className="mt-10 text-center sm:mt-0 sm:mb-2 sm:text-left">
+                <h1 className="text-2xl font-bold text-[#562f00] md:text-3xl">
+                  {brandName}
+                </h1>
+                <Badge
+                  variant="secondary"
+                  className="mt-2 bg-[#562f00]/10 text-[#562f00] hover:bg-[#562f00]/20"
+                >
+                  Member
+                </Badge>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-semibold text-[#562f00] sm:text-4xl">{brandName}</h1>
-              {domain ? (
-                <p className="mt-1 text-sm font-medium text-[#8d5828]">{domain}</p>
-              ) : null}
-              <article
-                className="article-content prose prose-slate mt-6 max-w-2xl text-base leading-relaxed prose-p:my-4 prose-a:text-primary prose-a:underline prose-strong:font-semibold"
-                dangerouslySetInnerHTML={{ __html: descriptionHtml }}
-              />
-            </div>
+          </div>
+
+          {/* Dark stats bar */}
+          <div className="bg-[#0f0f1a] px-6 py-4 md:px-12">
           </div>
         </section>
 
+        {/* Two-column body */}
+        <div className="mt-10 grid gap-8 lg:grid-cols-[280px_1fr]">
+          {/* Left sidebar */}
+          <aside className="space-y-6">
+            {/* Followers */}
+            <Card className="border-[#562f00]/10 bg-white shadow-sm">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-2 text-[#562f00]">
+                  <Users className="h-4 w-4 text-blue-400" />
+                  <span className="text-sm font-medium">{followerCount} Followers</span>
+                </div>
+                <p className="mt-4 text-center text-xs text-[#8d5828]/70">
+                  {followerCount} follower{followerCount !== 1 ? 's' : ''}
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* About */}
+            <Card className="border-[#562f00]/10 bg-white shadow-sm">
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center gap-2 text-sm font-medium text-[#562f00]">
+                  <Users className="h-4 w-4" />
+                  About {brandName}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 pt-0">
+                {website && (
+                  <div className="flex items-center gap-2 text-xs text-[#8d5828]">
+                    <Globe className="h-3.5 w-3.5 shrink-0" />
+                    <a
+                      href={website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="truncate hover:underline"
+                    >
+                      {domain || website}
+                    </a>
+                  </div>
+                )}
+                {birthday && (
+                  <div className="flex items-center gap-2 text-xs text-[#8d5828]">
+                    <Calendar className="h-3.5 w-3.5 shrink-0" />
+                    <span>Birthday {birthday}</span>
+                  </div>
+                )}
+                {!website && !birthday && (
+                  <p className="text-xs text-[#8d5828]/70">
+                    No additional information available.
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          </aside>
+
+          {/* Main content with tabs */}
+          <ProfileDetailClient
+            brandName={brandName}
+            descriptionHtml={descriptionHtml}
+            images={images}
+            website={website}
+            domain={domain}
+            birthday={birthday}
+          />
+        </div>
+
+        {/* Suggested Articles */}
         {suggestedArticles.length ? (
           <section className="mt-12">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-[#562f00]">Suggested articles</h2>
-              <Link href="/articles" className="text-sm font-medium text-[#562f00] hover:underline">
+              <h2 className="text-xl font-semibold text-[#562f00]">
+                Suggested articles
+              </h2>
+              <Link
+                href="/articles"
+                className="text-sm font-medium text-[#562f00] hover:underline"
+              >
                 View all
               </Link>
             </div>
@@ -155,7 +271,9 @@ export default async function ProfileDetailPage({ params }: { params: Promise<{ 
               ))}
             </div>
             <nav className="mt-6 rounded-2xl border border-[#562f00]/15 bg-[#fff9ec] p-4">
-              <p className="text-sm font-semibold text-[#562f00]">Related links</p>
+              <p className="text-sm font-semibold text-[#562f00]">
+                Related links
+              </p>
               <ul className="mt-2 space-y-2 text-sm">
                 {suggestedArticles.slice(0, 3).map((article) => (
                   <li key={`related-${article.id}`}>
@@ -168,7 +286,10 @@ export default async function ProfileDetailPage({ params }: { params: Promise<{ 
                   </li>
                 ))}
                 <li>
-                  <Link href="/profile" className="text-primary underline-offset-4 hover:underline">
+                  <Link
+                    href="/profile"
+                    className="text-primary underline-offset-4 hover:underline"
+                  >
                     Browse all profiles
                   </Link>
                 </li>

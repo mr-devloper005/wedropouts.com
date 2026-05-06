@@ -5,6 +5,7 @@ import { Footer } from "@/components/shared/footer";
 import { NavbarShell } from "@/components/shared/navbar-shell";
 import { ContentImage } from "@/components/shared/content-image";
 import { TaskPostCard } from "@/components/shared/task-post-card";
+import { PdfActions } from "@/components/shared/pdf-actions";
 import { SchemaJsonLd } from "@/components/seo/schema-jsonld";
 import { buildPostMetadata, buildTaskMetadata } from "@/lib/seo";
 import { buildPostUrl, fetchTaskPostBySlug, fetchTaskPosts } from "@/lib/task-data";
@@ -49,6 +50,9 @@ export default async function PdfDetailPage({ params }: { params: Promise<{ slug
     (typeof contentAny.description === "string" && contentAny.description.trim()) ||
     post.summary ||
     "Detailed PDF description will appear here.";
+  const pdfUrl =
+    (typeof contentAny.pdfUrl === "string" && contentAny.pdfUrl) ||
+    (typeof contentAny.fileUrl === "string" && contentAny.fileUrl);
   const previewImage =
     (Array.isArray(post.media) && typeof post.media[0]?.url === "string" && post.media[0]?.url) ||
     (typeof contentAny.image === "string" && contentAny.image) ||
@@ -106,18 +110,35 @@ export default async function PdfDetailPage({ params }: { params: Promise<{ slug
           ← Back to PDF Library
         </Link>
         <h1 className="text-2xl font-semibold text-[#562f00]">{post.title}</h1>
-        <div className="overflow-hidden rounded-2xl border border-[#562f00]/15 bg-[#fffdf1]">
-          <div className="relative aspect-[16/10] w-full bg-[#fff4df]">
-            <ContentImage
-              src={previewImage}
-              alt={`${post.title} cover`}
-              fill
-              className="object-cover"
-              intrinsicWidth={1200}
-              intrinsicHeight={800}
-            />
+        {/* PDF Viewer */}
+        {pdfUrl ? (
+          <div className="overflow-hidden rounded-2xl border border-[#562f00]/15 bg-[#fffdf1]">
+            <div className="p-4">
+              <h2 className="mb-4 text-lg font-semibold text-[#562f00]">Document Viewer</h2>
+              <div className="relative h-[600px] w-full overflow-hidden rounded-lg border border-[#562f00]/10 bg-white">
+                <iframe
+                  src={`${pdfUrl}#toolbar=0&statusbar=0&navpanes=0&scrollbar=0`}
+                  title={post.title}
+                  className="h-full w-full border-0"
+                  loading="lazy"
+                />
+              </div>
+              <div className="mt-4">
+                <PdfActions
+                  pdfUrl={pdfUrl}
+                  currentUrl={`${baseUrl}/pdf/${post.slug}`}
+                  title={post.title}
+                />
+              </div>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="overflow-hidden rounded-2xl border border-[#562f00]/15 bg-[#fffdf1]">
+            <div className="p-8 text-center">
+              <p className="text-[#8d5828]">PDF document not available for viewing.</p>
+            </div>
+          </div>
+        )}
         <div className="rounded-2xl border border-[#562f00]/15 bg-[#fff9ec] p-5">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8d5828]">Description</p>
           <p className="mt-3 text-base leading-8 text-[#7a4a1f]">{description}</p>
