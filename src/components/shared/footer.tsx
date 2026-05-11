@@ -19,13 +19,14 @@ const taskIcons: Record<TaskKey, any> = {
 }
 
 const footerLinks = {
-  platform: SITE_CONFIG.tasks.filter((task) => task.enabled).map((task) => ({
+  platform: SITE_CONFIG.tasks.filter((task) => task.enabled && task.key !== 'profile').map((task) => ({
     name: task.label,
     href: task.route,
     icon: taskIcons[task.key] || LayoutGrid,
   })),
   company: [
     { name: 'About', href: '/about' },
+    { name: 'Contact Us', href: '/contact' },
     { name: 'Team', href: '/team' },
     { name: 'Careers', href: '/careers' },
     { name: 'Blog', href: '/blog' },
@@ -66,7 +67,7 @@ export function Footer() {
     return (
       <footer className="border-t border-[#562f00]/15 bg-[linear-gradient(180deg,#fff8e8_0%,#fff0d5_100%)] text-[#562f00]">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr_1fr]">
+          <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr_0.9fr]">
             <div className="rounded-[1.8rem] border border-[#562f00]/14 bg-[#fffdf1] p-6">
               <div className="flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl border border-[#562f00]/15 bg-[#fff7e7] p-1.5">
@@ -82,7 +83,7 @@ export function Footer() {
             <div>
               <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8d5828]">Primary navigation</h3>
               <ul className="mt-4 space-y-3 text-sm">
-                {[pdfTask, profileTask].filter(Boolean).map((task: any) => (
+                {[pdfTask].filter(Boolean).map((task: any) => (
                   <li key={task.key}>
                     <Link href={task.route} className="inline-flex items-center gap-2 font-semibold hover:text-[#8d5828]">
                       <ArrowRight className="h-3.5 w-3.5" />
@@ -91,6 +92,13 @@ export function Footer() {
                   </li>
                 ))}
                 <li><Link href="/search" className="inline-flex items-center gap-2 hover:text-[#8d5828]"><ArrowRight className="h-3.5 w-3.5" />Search across all tasks</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8d5828]">Company</h3>
+              <ul className="mt-4 space-y-3 text-sm">
+                <li><Link href="/about" className="inline-flex items-center gap-2 hover:text-[#8d5828]"><ArrowRight className="h-3.5 w-3.5" />About Us</Link></li>
+                <li><Link href="/contact" className="inline-flex items-center gap-2 hover:text-[#8d5828]"><ArrowRight className="h-3.5 w-3.5" />Contact Us</Link></li>
               </ul>
             </div>
             <div />
@@ -110,7 +118,7 @@ export function Footer() {
             <p className="mt-1 text-sm text-[#56604b]">{SITE_CONFIG.description}</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            {enabledTasks.slice(0, 5).map((task) => (
+            {enabledTasks.filter((task) => task.key !== 'profile').slice(0, 5).map((task) => (
               <Link key={task.key} href={task.route} className="rounded-lg border border-[#d7deca] bg-white px-3 py-2 text-sm font-medium text-[#1f2617] hover:bg-[#ebefdf]">
                 {task.label}
               </Link>
@@ -228,6 +236,14 @@ export function Footer() {
                 <span className="text-xs uppercase tracking-[0.22em] text-slate-500">{siteContent.footer.tagline}</span>
               </div>
             </Link>
+            <div className="flex gap-2">
+              <Link href="/about" className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-900 hover:bg-slate-50">
+                About Us
+              </Link>
+              <Link href="/contact" className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-900 hover:bg-slate-50">
+                Contact Us
+              </Link>
+            </div>
             <p className="mt-5 max-w-sm text-sm leading-7 text-slate-600">{SITE_CONFIG.description}</p>
           </div>
           {(['platform', 'company', 'resources', 'legal'] as const).map((section) => (
