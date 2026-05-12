@@ -2,10 +2,10 @@ import type { TaskKey } from '@/lib/site-config'
 
 export const siteContent = {
   navbar: {
-    tagline: 'Professional PDF and profile hub',
+    tagline: '',
   },
   footer: {
-    tagline: 'Trusted documents and identities',
+    tagline: 'A PDF site for clean discovery and structured publishing.',
   },
   hero: {
     badge: 'Purpose-built workspace',
