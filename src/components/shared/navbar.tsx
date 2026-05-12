@@ -97,9 +97,7 @@ export function Navbar() {
   const { isAuthenticated } = useAuth()
   const { recipe } = getFactoryState()
   const primaryTask = SITE_CONFIG.tasks.find((task) => task.key === 'pdf') || SITE_CONFIG.tasks.find((task) => task.enabled)
-  const secondaryTask = SITE_CONFIG.tasks.find((task) => task.key === 'profile')
   const isPrimaryActive = primaryTask ? pathname.startsWith(primaryTask.route) : false
-  const isSecondaryActive = secondaryTask ? pathname.startsWith(secondaryTask.route) : false
 
   const navigation = useMemo(() => SITE_CONFIG.tasks.filter((task) => task.enabled && task.key !== 'profile'), [])
   const primaryNavigation = navigation.slice(0, 5)
@@ -129,12 +127,7 @@ export function Navbar() {
               <Link href={primaryTask.route} className={cn('rounded-full px-4 py-2 text-sm font-semibold transition-colors', isPrimaryActive ? 'bg-[#562f00] text-[#fff7e6]' : 'bg-[#ffce99]/40 text-[#562f00] hover:bg-[#ffce99]/70')}>
                 {primaryTask.label}
               </Link>
-              {secondaryTask ? (
-                <Link href={secondaryTask.route} className={cn('rounded-full px-4 py-2 text-sm font-semibold transition-colors', isSecondaryActive ? 'bg-[#562f00] text-[#fff7e6]' : 'bg-[#ffce99]/40 text-[#562f00] hover:bg-[#ffce99]/70')}>
-                  {secondaryTask.label}
-                </Link>
-              ) : null}
-            </div>
+                          </div>
           </div>
           <div className="hidden xl:block" />
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
@@ -167,7 +160,7 @@ export function Navbar() {
                 <Search className="h-4 w-4" />
                 Search the library
               </Link>
-              {[primaryTask, secondaryTask].filter(Boolean).map((item: any) => (
+              {[primaryTask].filter(Boolean).map((item: any) => (
                 <Link key={item.key} href={item.route} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 rounded-2xl border border-[#562f00]/12 bg-[#fffdf1] px-4 py-3 text-sm font-semibold text-[#562f00]">
                   <ChevronRight className="h-4 w-4 text-[#ff9644]" />
                   {item.label}

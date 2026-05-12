@@ -4,7 +4,7 @@ export const siteIdentity = {
   tagline: process.env.NEXT_PUBLIC_SITE_TAGLINE || 'PDF + Profile platform',
   description:
     process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
-    'A pdf + profile site for Wedropouts, built for clean discovery and structured publishing.',
+    'A pdf site for Wedropouts, built for clean discovery and structured publishing.',
   domain: process.env.NEXT_PUBLIC_SITE_DOMAIN || 'wedropouts.com',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://wedropouts.com',
   ogImage: process.env.NEXT_PUBLIC_SITE_OG_IMAGE || '/og-default.png',

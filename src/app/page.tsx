@@ -155,6 +155,11 @@ function PdfProfileHome({
   const focusPosts = [...fallbackPdfPosts, ...pdfPosts]
     .filter((post, index, list) => list.findIndex((item) => item.slug === post.slug) === index)
     .slice(0, 4)
+  
+  // Use only real PDF posts for latest uploads section
+  const latestPdfPosts = pdfPosts
+    .filter((post, index, list) => list.findIndex((item) => item.slug === post.slug) === index)
+    .slice(0, 6)
   const profileHighlights = [...fallbackProfilePosts, ...profilePosts]
     .filter((post, index, list) => list.findIndex((item) => item.slug === post.slug) === index)
     .slice(0, 3)
@@ -165,11 +170,7 @@ function PdfProfileHome({
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
           <div className="grid gap-9 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
             <div>
-              <span className="inline-flex items-center gap-2 rounded-full border border-[#562f00]/20 bg-[#ffce99]/55 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#562f00]">
-                <Archive className="h-3.5 w-3.5" />
-                PDF and profile platform
-              </span>
-              <h1 className="mt-6 max-w-4xl text-5xl font-semibold tracking-[-0.05em] sm:text-6xl">
+                            <h1 className="mt-6 max-w-4xl text-5xl font-semibold tracking-[-0.05em] sm:text-6xl">
                 A classic workspace for trusted documents and clear profile identity.
               </h1>
               <p className="mt-6 max-w-2xl text-base leading-8 text-[#7a4a1f]">
@@ -180,10 +181,7 @@ function PdfProfileHome({
                   Open PDF Library
                   <ArrowRight className="h-4 w-4" />
                 </Link>
-                <Link href={secondaryTask?.route || '/profile'} className="inline-flex items-center gap-2 rounded-full border border-[#562f00]/20 bg-[#fffdf1] px-5 py-3 text-sm font-semibold text-[#562f00] hover:bg-[#ffefd2]">
-                  View professional profiles
-                </Link>
-              </div>
+                              </div>
             </div>
             <aside className="space-y-4 rounded-[2rem] border border-[#562f00]/14 bg-[#fff8e8] p-6 shadow-[0_26px_60px_rgba(86,47,0,0.1)]">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8d5828]">Purpose of this website</p>
@@ -214,29 +212,22 @@ function PdfProfileHome({
 
       <section className="border-y border-[#562f00]/12 bg-[#fff7e6]">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-          <div className="grid gap-7 lg:grid-cols-[0.95fr_1.05fr]">
-            <div className="rounded-[2rem] border border-[#562f00]/14 bg-[#fffdf1] p-7">
-              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">Profile surfaces with stronger trust cues</h2>
-              <p className="mt-4 text-sm leading-7 text-[#7a4a1f]">
-                Profiles remain the second major discovery lane, helping visitors connect each document to verified people and organizations.
-              </p>
-              <Link href="/profile" className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#562f00] px-5 py-3 text-sm font-semibold text-[#fff7e6] hover:bg-[#6c3b03]">
-                Open profiles
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-3">
-              {profileHighlights.map((post) => (
-                <Link key={post.id} href={getTaskHref('profile', post.slug)} className="rounded-[1.4rem] border border-[#562f00]/12 bg-[#fffdf1] p-4 hover:bg-[#fff5df]">
-                  <div className="relative mb-3 h-32 overflow-hidden rounded-xl border border-[#562f00]/10 bg-[#fff4e1]">
-                    <ContentImage src={getPostImage(post)} alt={post.title} fill className="object-cover" />
-                  </div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8d5828]">Profile</p>
-                  <h3 className="mt-2 line-clamp-2 text-lg font-semibold">{post.title}</h3>
-                  <p className="mt-2 line-clamp-3 text-sm leading-7 text-[#7a4a1f]">{post.summary || 'Professional identity and publication context.'}</p>
-                </Link>
-              ))}
-            </div>
+          <div className="mb-8">
+            <h2 className="text-3xl font-semibold tracking-[-0.04em]">Latest Uploads</h2>
+            <p className="mt-4 text-sm leading-7 text-[#7a4a1f]">
+              Recently published documents and resources from our community.
+            </p>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {latestPdfPosts.map((post) => (
+              <TaskPostCard key={post.id} post={post} href={getTaskHref('pdf', post.slug)} taskKey="pdf" />
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Link href="/pdf" className="inline-flex items-center gap-2 rounded-full bg-[#562f00] px-6 py-3 text-sm font-semibold text-[#fff7e6] hover:bg-[#6c3b03]">
+              View all uploads
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </div>
       </section>
